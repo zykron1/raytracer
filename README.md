@@ -1,2 +1,2 @@
 # raytracer
-Leisurely made raytracing engine
+Pure CPU/Software raytracer implementation in C++. No external libraries, just the .ppm format.
