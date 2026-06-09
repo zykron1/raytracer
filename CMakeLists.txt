@@ -14,4 +14,4 @@ add_executable(Raytracer ${SOURCES})
 find_package(OpenMP REQUIRED)
 target_link_libraries(Raytracer OpenMP::OpenMP_CXX)
 
-target_include_directories(Raytracer PRIVATE src)
+target_include_directories(Raytracer PRIVATE src -O3)

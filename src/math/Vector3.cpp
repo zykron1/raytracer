@@ -46,3 +46,7 @@ Vector3& Vector3::operator*=(const Vector3& v) {
 Vector3 Vector3::operator*(const Vector3& v) const {
 	return Vector3(x * v.x, y * v.y, z * v.z);
 }
+
+float Vector3::lengthSquared() const {
+    return x*x + y*y + z*z;
+}

@@ -1,3 +1,4 @@
+#include <iostream>
 #include <limits>
 #include <vector>
 #include <memory>
@@ -13,14 +14,14 @@ void Raytracer::render(int samples, int bounces) {
 	objects.push_back(
 		std::make_unique<Sphere>(
 			MaterialInfo{Vector3(0,0,0), Vector3(1,1,1), 15.0f},
-			Vector3(0, 5, 10), 
-			3 
+			Vector3(0, 7, 10), 
+			5
 		)
 	);
 
 	objects.push_back(
         std::make_unique<Sphere>(
-            MaterialInfo{Vector3(1,0,0), Vector3(0,0,0), 0.0f}, // pure white light
+            MaterialInfo{Vector3(1,0,0), Vector3(0,0,0), 0.0f},
             Vector3(0,0,10),
             1.5f
         )
@@ -29,7 +30,7 @@ void Raytracer::render(int samples, int bounces) {
 	objects.push_back(
 		std::make_unique<Sphere>(
 			MaterialInfo{Vector3(0,1,0), Vector3(), 0.0f},
-			Vector3(3.5,0,10), 
+			Vector3(3.5,-1,10), 
 			1.5f
 		)
 	);
@@ -37,18 +38,18 @@ void Raytracer::render(int samples, int bounces) {
 	objects.push_back(
 		std::make_unique<Sphere>(
 			MaterialInfo{Vector3(0,0,1), Vector3(), 0.0f},
-			Vector3(-3.5,0,10), 
+			Vector3(-3.5,-1,10), 
 			1.5f
 		)
 	);
 
 	objects.push_back(
-			std::make_unique<Sphere>(
-				MaterialInfo{Vector3(0.8, 0.8, 0.8), Vector3(), 0.0f}, // matte gray
-				Vector3(0, -1005, 10),  // positioned so top surface is around y=0
-				1000
-				)
-			);
+		std::make_unique<Sphere>(
+	        MaterialInfo{Vector3(0.8, 0.8, 0.8), Vector3(0,0,0), 0.0f},
+	        Vector3(0, -21.5f, 10),
+	        20
+	    )
+	);
 
 	float aspect = (float)width/(float)height;
 	float scale = 1.0f;
@@ -57,6 +58,7 @@ void Raytracer::render(int samples, int bounces) {
 	
 	#pragma omp parallel for schedule(dynamic, 16) collapse(2)
 	for (int y = 0; y < height; y++) {
+		std::cout << "PROGRESS:" << (100.0f*y/height) << "%\n";
 		for (int x = 0; x < width; x++) {
 			float ndcX = (x + 0.5f) / width;
 			float ndcY = (y + 0.5f) / height;
@@ -98,7 +100,7 @@ HitInfo Raytracer::getCollisions(Ray& ray) {
 		if (!h.didHit)
 			continue;
 
-		float distance = (h.hitPoint - ray.origin).length();
+		float distance = (h.hitPoint - ray.origin).lengthSquared();
 
 		if (distance < closestDistance) {
 			closestDistance = distance;
@@ -142,18 +144,32 @@ Vector3 Raytracer::trace(Ray& ray, int maxBounce) {
 	for (int i = 0; i < maxBounce; i++) {
 		HitInfo hitInfo = this->getCollisions(ray);
 		if (hitInfo.didHit) {
-			ray.origin = hitInfo.hitPoint;
+			ray.origin = hitInfo.hitPoint + hitInfo.normal * 0.001f;
 			ray.direction = this->getRandomDirectionByNormal(hitInfo.normal);
-			
 			const MaterialInfo material = *hitInfo.material;
 
 			Vector3 emittedLight = material.emissionColor * material.emissionStrength;
+			float strength = hitInfo.normal.dot(ray.direction);
+
 			incomingLight += emittedLight * rayColor;
-			rayColor *= material.color;
+			// x2 bc lambart cosine law, halfs the power of light
+			rayColor *= material.color * strength * 2;
 		} else {
+			incomingLight += rayColor * this->getEnvironmentalLighting(ray);
 			break;
 		}
 	}
 
 	return incomingLight;
+}
+
+Vector3 Raytracer::getEnvironmentalLighting(Ray& ray) {
+	Vector3 dir = ray.direction.normalized();
+
+	float t = 0.5f * (dir.y + 1.0f);
+
+	Vector3 sky(0.5f, 0.7f, 1.0f);
+	Vector3 ground(0.2f, 0.2f, 0.2f);
+
+	return sky * t + ground * (1.0f - t);
 }

@@ -17,6 +17,7 @@ private:
 	HitInfo getCollisions(Ray& ray);
 	Vector3 getRandomDirection();
 	Vector3 getRandomDirectionByNormal(Vector3& normal);
+	Vector3 getEnvironmentalLighting(Ray& ray);
 	Vector3 trace(Ray& ray, int maxBounce);
 	
 	PPM image{width, height};

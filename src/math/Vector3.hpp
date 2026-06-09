@@ -23,5 +23,6 @@ public:
     Vector3 cross(const Vector3& v) const;
 
     float length() const;
+	float lengthSquared() const;
     Vector3 normalized() const;
 };
