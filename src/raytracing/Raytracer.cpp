@@ -21,7 +21,7 @@ void Raytracer::render(int samples, int bounces) {
 
 	objects.push_back(
         std::make_unique<Sphere>(
-            MaterialInfo{Vector3(1,0,0), Vector3(0,0,0), 0.0f},
+            MaterialInfo{Vector3(0.85f,0.1f,0.1f), Vector3(0,0,0), 0.0f},
             Vector3(0,0,10),
             1.5f
         )
@@ -29,26 +29,26 @@ void Raytracer::render(int samples, int bounces) {
 
 	objects.push_back(
 		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0,1,0), Vector3(), 0.0f},
-			Vector3(3.5,-1,10), 
+			MaterialInfo{Vector3(0.1f,0.85f,0.1f), Vector3(), 0.0f},
+			Vector3(3.5,-0.3f,10), 
 			1.5f
 		)
 	);
 	
 	objects.push_back(
 		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0,0,1), Vector3(), 0.0f},
-			Vector3(-3.5,-1,10), 
+			MaterialInfo{Vector3(0.1f,0.1f,0.85f), Vector3(), 0.0f},
+			Vector3(-3.5,-0.3f,10), 
 			1.5f
 		)
 	);
 
 	objects.push_back(
 		std::make_unique<Sphere>(
-	        MaterialInfo{Vector3(0.8, 0.8, 0.8), Vector3(0,0,0), 0.0f},
-	        Vector3(0, -21.5f, 10),
-	        20
-	    )
+			MaterialInfo{Vector3(0.8, 0.8, 0.8), Vector3(0,0,0), 0.0f},
+			Vector3(0, -21.5f, 10),
+			20
+		)
 	);
 
 	float aspect = (float)width/(float)height;

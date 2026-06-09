@@ -1,2 +1,5 @@
 # raytracer
-Pure CPU/Software raytracer implementation in C++. No external libraries, just the .ppm format.
+Leisurely made raytracing engine
+
+![render](final.png)
+1920x1080 image 512 samples @ 5 bounce limit
