@@ -5,7 +5,7 @@ int main(int argc, char *argv[]) {
 	std::cout << "Working Build system perchance?";
 
 	Raytracer r(1920,1080);
-	r.render(512, 5);
+	r.render(32, 5);
 
 	return 0;
 }
