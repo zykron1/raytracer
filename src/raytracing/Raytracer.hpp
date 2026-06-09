@@ -19,6 +19,7 @@ private:
 	Vector3 getRandomDirectionByNormal(Vector3& normal);
 	Vector3 getEnvironmentalLighting(Ray& ray);
 	Vector3 trace(Ray& ray, int maxBounce);
+	Vector3 reflect(Ray& ray, Vector3& normal);
 	
 	PPM image{width, height};
 	Vector3 camera{0, 0, -5};

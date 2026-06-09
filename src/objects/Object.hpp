@@ -4,6 +4,7 @@
 struct MaterialInfo {
 	Vector3 color;
 	Vector3 emissionColor;
+	float smoothness;
 	float emissionStrength;
 };
 

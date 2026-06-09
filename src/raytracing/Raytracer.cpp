@@ -13,7 +13,7 @@
 void Raytracer::render(int samples, int bounces) {
 	objects.push_back(
 		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0,0,0), Vector3(1,1,1), 15.0f},
+			MaterialInfo{Vector3(0,0,0), Vector3(1,1,1), 0.0f, 15.0f},
 			Vector3(0, 7, 10), 
 			5
 		)
@@ -21,7 +21,7 @@ void Raytracer::render(int samples, int bounces) {
 
 	objects.push_back(
         std::make_unique<Sphere>(
-            MaterialInfo{Vector3(0.85f,0.1f,0.1f), Vector3(0,0,0), 0.0f},
+            MaterialInfo{Vector3(0.85f,0.1f,0.1f), Vector3(0,0,0), 0.6f, 0.0f},
             Vector3(0,0,10),
             1.5f
         )
@@ -29,7 +29,7 @@ void Raytracer::render(int samples, int bounces) {
 
 	objects.push_back(
 		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0.1f,0.85f,0.1f), Vector3(), 0.0f},
+			MaterialInfo{Vector3(0.1f,0.85f,0.1f), Vector3(), 0.4f, 0.0f},
 			Vector3(3.5,-0.3f,10), 
 			1.5f
 		)
@@ -37,7 +37,7 @@ void Raytracer::render(int samples, int bounces) {
 	
 	objects.push_back(
 		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0.1f,0.1f,0.85f), Vector3(), 0.0f},
+			MaterialInfo{Vector3(0.1f,0.1f,0.85f), Vector3(), 1.0f, 0.0f},
 			Vector3(-3.5,-0.3f,10), 
 			1.5f
 		)
@@ -145,8 +145,14 @@ Vector3 Raytracer::trace(Ray& ray, int maxBounce) {
 		HitInfo hitInfo = this->getCollisions(ray);
 		if (hitInfo.didHit) {
 			ray.origin = hitInfo.hitPoint + hitInfo.normal * 0.001f;
-			ray.direction = this->getRandomDirectionByNormal(hitInfo.normal);
+			
+			Vector3 diffuse = this->getRandomDirectionByNormal(hitInfo.normal);
+			Vector3 specular = this->reflect(ray, hitInfo.normal);
+
 			const MaterialInfo material = *hitInfo.material;
+
+			ray.direction = diffuse * (1.0f - material.smoothness)
+              + specular * material.smoothness;
 
 			Vector3 emittedLight = material.emissionColor * material.emissionStrength;
 			float strength = hitInfo.normal.dot(ray.direction);
@@ -173,3 +179,13 @@ Vector3 Raytracer::getEnvironmentalLighting(Ray& ray) {
 
 	return sky * t + ground * (1.0f - t);
 }
+
+Vector3 Raytracer::reflect(Ray& ray, Vector3& normal) {
+	Vector3 d = ray.direction;
+	Vector3 n = normal;
+
+	float dotDN = d.dot(n);
+
+	return d - n * (2.0f * dotDN);
+}
+
