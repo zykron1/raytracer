@@ -11,7 +11,7 @@ HitInfo Sphere::collision(const Ray& ray) const {
 	float discriminant = b * b - 4.0f * a * c;
 
 	if (discriminant < 0.0f)
-		return {false, Vector3(), nullptr};
+		return {false, Vector3(), Vector3(), nullptr};
 
 	float sqrtD = sqrtf(discriminant);
 
@@ -24,13 +24,15 @@ HitInfo Sphere::collision(const Ray& ray) const {
 		t = t1;
 
 	if (t < 0.0f)
-		return {false, Vector3(), nullptr};
+		return {false, Vector3(), Vector3(), nullptr};
 
 	Vector3 hitPoint = ray.origin + ray.direction * t;
+	Vector3 normal = (hitPoint - this->position).normalized();
 
 	return {
 		true,
 		hitPoint,
+		normal,
 		&material
 	};
 }

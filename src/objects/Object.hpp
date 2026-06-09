@@ -3,12 +3,14 @@
 
 struct MaterialInfo {
 	Vector3 color;
+	Vector3 emissionColor;
 	float emissionStrength;
 };
 
 struct HitInfo {
 	bool didHit;
 	Vector3 hitPoint;
+	Vector3 normal;
 	const MaterialInfo* material = nullptr;
 };
 
