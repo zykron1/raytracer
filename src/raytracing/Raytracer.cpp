@@ -21,7 +21,7 @@ void Raytracer::render(int samples, int bounces) {
 		)
 	);
 
-	/*
+	
 	objects.push_back(
         std::make_unique<Sphere>(
             MaterialInfo{Vector3(0.85f,0.1f,0.1f), Vector3(0,0,0), 0.6f, 0.0f},
@@ -47,24 +47,25 @@ void Raytracer::render(int samples, int bounces) {
 		)
 	);
 
-	
+	/*	
 	objects.push_back(
-	    std::make_unique<Triangle>(
-	        MaterialInfo{Vector3(0.8f, 0.8f, 0.8f), Vector3(0,0,0), 0.0f, 0.0f},
-	        Vector3(-3, -3, 12),
-	        Vector3( 3, -3, 12),
-	        Vector3( 0,  3, 12)
-	    )
+		std::make_unique<Triangle>(
+			MaterialInfo{Vector3(0.8f, 0.8f, 0.8f), Vector3(0,0,0), 0.0f, 0.0f},
+			Vector3(-3, -3, 12),
+			Vector3( 3, -3, 12),
+			Vector3( 0,  3, 12)
+		)
 	);
-	*/
+	
 
 	loadOBJ("model.obj", objects,
-	    MaterialInfo{Vector3(0.8f, 0.2f, 0.2f), Vector3(), 0.5f, 0.0f},
-	    Transform{
-	        Vector3(-2, -0.03f, 5.1f),
-	        Vector3(0.03, 0.03, 0.03) 
-	    }
+		MaterialInfo{Vector3(0.8f, 0.2f, 0.2f), Vector3(), 0.5f, 0.0f},
+		Transform{
+			Vector3(-2, -0.03f, 5.1f),
+			Vector3(0.03, 0.03, 0.03) 
+		}
 	);
+	*/
 
 	objects.push_back(
 		std::make_unique<Sphere>(
