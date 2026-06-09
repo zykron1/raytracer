@@ -80,7 +80,9 @@ void Raytracer::render(int samples, int bounces) {
 
 	int max_bounce = 3;
 	
+	#ifdef _OPENMP
 	#pragma omp parallel for schedule(dynamic, 16) collapse(2)
+	#endif
 	for (int y = 0; y < height; y++) {
 		std::cout << "PROGRESS:" << (100.0f*y/height) << "%\n";
 		for (int x = 0; x < width; x++) {

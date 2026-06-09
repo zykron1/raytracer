@@ -11,7 +11,19 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(Raytracer ${SOURCES})
 
-find_package(OpenMP REQUIRED)
-target_link_libraries(Raytracer OpenMP::OpenMP_CXX)
+target_include_directories(Raytracer PRIVATE
+    src
+)
 
-target_include_directories(Raytracer PRIVATE src -O3)
+target_compile_options(Raytracer PRIVATE
+    -O3
+)
+
+# Produce a self-contained Windows executable
+if(MINGW)
+    target_link_options(Raytracer PRIVATE
+        -static
+        -static-libgcc
+        -static-libstdc++
+    )
+endif()
