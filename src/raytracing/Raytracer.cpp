@@ -4,77 +4,16 @@
 #include <memory>
 #include <random>
 #include "../export/PPM.hpp"
-#include "../export/OBJ.hpp"
 #include "../math/Ray.hpp"
 #include "../math/Vector3.hpp"
 #include "../objects/Object.hpp"
-#include "../objects/Sphere.hpp"
-#include "../objects/Triangle.hpp"
 #include "Raytracer.hpp"
 
+void Raytracer::addObject(std::unique_ptr<Object> obj) {
+	objects.push_back(std::move(obj));
+}
+
 void Raytracer::render(int samples, int bounces) {
-	objects.push_back(
-		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0,0,0), Vector3(1,1,1), 0.0f, 15.0f},
-			Vector3(0, 7, 10), 
-			5
-		)
-	);
-
-	
-	objects.push_back(
-        std::make_unique<Sphere>(
-            MaterialInfo{Vector3(0.85f,0.1f,0.1f), Vector3(0,0,0), 0.6f, 0.0f},
-            Vector3(0,0,10),
-            1.5f
-        )
-    );
-
-	objects.push_back(
-		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0.1f,0.85f,0.1f), Vector3(), 0.4f, 0.0f},
-			Vector3(3.5,-0.3f,10), 
-			1.5f
-		)
-	);
-	
-	
-	objects.push_back(
-		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0.1f,0.1f,0.85f), Vector3(), 1.0f, 0.0f},
-			Vector3(-3.5,-0.3f,10), 
-			1.5f
-		)
-	);
-
-	/*	
-	objects.push_back(
-		std::make_unique<Triangle>(
-			MaterialInfo{Vector3(0.8f, 0.8f, 0.8f), Vector3(0,0,0), 0.0f, 0.0f},
-			Vector3(-3, -3, 12),
-			Vector3( 3, -3, 12),
-			Vector3( 0,  3, 12)
-		)
-	);
-	
-
-	loadOBJ("model.obj", objects,
-		MaterialInfo{Vector3(0.8f, 0.2f, 0.2f), Vector3(), 0.5f, 0.0f},
-		Transform{
-			Vector3(-2, -0.03f, 5.1f),
-			Vector3(0.03, 0.03, 0.03) 
-		}
-	);
-	*/
-
-	objects.push_back(
-		std::make_unique<Sphere>(
-			MaterialInfo{Vector3(0.8, 0.8, 0.8), Vector3(0,0,0), 0.0f},
-			Vector3(0, -21.5f, 10),
-			20
-		)
-	);
-
 	float aspect = (float)width/(float)height;
 	float scale = 1.0f;
 
@@ -83,6 +22,7 @@ void Raytracer::render(int samples, int bounces) {
 	#ifdef _OPENMP
 	#pragma omp parallel for schedule(dynamic, 16) collapse(2)
 	#endif
+
 	for (int y = 0; y < height; y++) {
 		std::cout << "PROGRESS:" << (100.0f*y/height) << "%\n";
 		for (int x = 0; x < width; x++) {

@@ -4,7 +4,7 @@
 #include "../objects/Triangle.hpp"
 #include "OBJ.hpp"
 
-void loadOBJ(const std::string& path, std::vector<std::unique_ptr<Object>>& objects, const MaterialInfo& material, const Transform& transform) {
+void loadOBJ(const std::string& path, Raytracer& r, const MaterialInfo& material, const Transform& transform) {
     std::ifstream file(path);
     if (!file.is_open()) {
         std::cerr << "Failed to open OBJ file: " << path << std::endl;
@@ -54,7 +54,7 @@ void loadOBJ(const std::string& path, std::vector<std::unique_ptr<Object>>& obje
                     continue;
                 }
 
-                objects.push_back(std::make_unique<Triangle>(
+                r.addObject(std::make_unique<Triangle>(
                     material,
                     vertices[i0],
                     vertices[i1],
